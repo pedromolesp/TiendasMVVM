@@ -34,6 +34,7 @@ class MainViewModel : ViewModel() {
 
         interactor.getStores {
             stores.value = it
+            storeList = it
         }
     }
 

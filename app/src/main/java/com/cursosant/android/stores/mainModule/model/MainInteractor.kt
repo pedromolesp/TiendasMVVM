@@ -39,7 +39,6 @@ class MainInteractor {
         }
     }
     fun updateStore(storeEntity: StoreEntity, callback:(StoreEntity)->Unit){
-        storeEntity.isFavorite = !storeEntity.isFavorite
         doAsync {
             StoreApplication.database.storeDao().updateStore(storeEntity)
             uiThread {

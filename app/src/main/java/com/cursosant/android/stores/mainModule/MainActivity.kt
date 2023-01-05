@@ -5,6 +5,7 @@ import android.net.Uri
 import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
 import com.cursosant.android.stores.*
 import com.cursosant.android.stores.common.utils.MainAux
@@ -13,6 +14,7 @@ import com.cursosant.android.stores.databinding.ActivityMainBinding
 import com.cursosant.android.stores.editModule.EditStoreFragment
 import com.cursosant.android.stores.mainModule.adapter.OnClickListener
 import com.cursosant.android.stores.mainModule.adapter.StoreAdapter
+import com.cursosant.android.stores.mainModule.viewmodel.MainViewModel
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.uiThread
@@ -23,7 +25,8 @@ class MainActivity : AppCompatActivity(), OnClickListener, MainAux {
 
     private lateinit var mAdapter: StoreAdapter
     private lateinit var mGridLayout: GridLayoutManager
-
+    //MVVM
+    private lateinit var mMainViewModel: MainViewModel
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         mBinding = ActivityMainBinding.inflate(layoutInflater)
@@ -32,6 +35,14 @@ class MainActivity : AppCompatActivity(), OnClickListener, MainAux {
         mBinding.fab.setOnClickListener { launchEditFragment() }
 
         setupRecylcerView()
+        setupViewModel()
+    }
+
+    private fun setupViewModel() {
+        mMainViewModel = ViewModelProvider(this).get(MainViewModel::class.java)
+        mMainViewModel.getStores().observe(this,{ stores ->
+            mAdapter.setStores(stores)
+        })
     }
 
     private fun launchEditFragment(args: Bundle? = null) {
@@ -51,7 +62,7 @@ class MainActivity : AppCompatActivity(), OnClickListener, MainAux {
     private fun setupRecylcerView() {
         mAdapter = StoreAdapter(mutableListOf(), this)
         mGridLayout = GridLayoutManager(this, resources.getInteger(R.integer.main_columns))
-        getStores()
+//        getStores()
 
         mBinding.recyclerView.apply {
             setHasFixedSize(true)

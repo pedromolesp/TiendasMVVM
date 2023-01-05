@@ -26,7 +26,7 @@ import org.jetbrains.anko.uiThread
 class EditStoreFragment : Fragment() {
 
     private lateinit var mBinding: FragmentEditStoreBinding
-    private lateinit var mEditStoreViewModel:EditStoreViewModel
+    private lateinit var mEditStoreViewModel: EditStoreViewModel
 
     private var mActivity: MainActivity? = null
     private var mIsEditMode: Boolean = false
@@ -34,8 +34,10 @@ class EditStoreFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        mEditStoreViewModel = ViewModelProvider(requireActivity()).get(EditStoreViewModel::class.java)
+        mEditStoreViewModel =
+            ViewModelProvider(requireActivity()).get(EditStoreViewModel::class.java)
     }
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -47,22 +49,23 @@ class EditStoreFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        val id = arguments?.getLong(getString(R.string.arg_id), 0)
-        if (id != null && id != 0L) {
-            mIsEditMode = true
-            getStore(id)
-        } else {
-            mIsEditMode = false
-            mStoreEntity = StoreEntity(name = "", phone = "", photoUrl = "")
-        }
         setupViewModel()
-        setupActionBar()
         setupTextFields()
     }
 
     private fun setupViewModel() {
+        mEditStoreViewModel.getStoreSelected().observe(viewLifecycleOwner) {
+            mStoreEntity = it
+            if (it.id != 0L) {
+                mIsEditMode = true
+                setUiStore(it)
+            } else {
+                mIsEditMode = false
+            }
 
+            setupActionBar()
+
+        }
     }
 
     private fun setupActionBar() {
@@ -94,12 +97,7 @@ class EditStoreFragment : Fragment() {
             .into(mBinding.imgPhoto)
     }
 
-    private fun getStore(id: Long) {
-        doAsync {
-            mStoreEntity = StoreApplication.database.storeDao().getStoreById(id)
-            uiThread { if (mStoreEntity != null) setUiStore(mStoreEntity!!) }
-        }
-    }
+
 
     private fun setUiStore(storeEntity: StoreEntity) {
         with(mBinding) {

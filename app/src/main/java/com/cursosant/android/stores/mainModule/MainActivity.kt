@@ -53,11 +53,10 @@ class MainActivity : AppCompatActivity(), OnClickListener {
 
     }
 
-    private fun launchEditFragment(args: Bundle? = null) {
+    private fun launchEditFragment(storeEntity: StoreEntity = StoreEntity()) {
         mEditSoreViewModel.setShowFab(false)
+        mEditSoreViewModel.setStoreSelected(storeEntity)
         val fragment = EditStoreFragment()
-        if (args != null) fragment.arguments = args
-
         val fragmentManager = supportFragmentManager
         val fragmentTransaction = fragmentManager.beginTransaction()
 
@@ -90,11 +89,8 @@ class MainActivity : AppCompatActivity(), OnClickListener {
     /*
     * OnClickListener
     * */
-    override fun onClick(storeId: Long) {
-        val args = Bundle()
-        args.putLong(getString(R.string.arg_id), storeId)
-
-        launchEditFragment(args)
+    override fun onClick(storeEntity: StoreEntity) {
+        launchEditFragment(storeEntity)
     }
 
     override fun onFavoriteStore(storeEntity: StoreEntity) {

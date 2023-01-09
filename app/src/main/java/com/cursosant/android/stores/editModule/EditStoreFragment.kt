@@ -26,7 +26,7 @@ class EditStoreFragment : Fragment() {
 
     private var mActivity: MainActivity? = null
     private var mIsEditMode: Boolean = false
-    private var mStoreEntity: StoreEntity? = null
+    private lateinit var mStoreEntity: StoreEntity
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -65,9 +65,9 @@ class EditStoreFragment : Fragment() {
         mEditStoreViewModel.getResult().observe(viewLifecycleOwner) { result ->
             when (result) {
                 is Long -> {
-                    mStoreEntity!!.id = result
+                    mStoreEntity.id = result
 
-                    mEditStoreViewModel.setStoreSelected(mStoreEntity!!)
+                    mEditStoreViewModel.setStoreSelected(mStoreEntity)
 
                     Toast.makeText(
                         mActivity,
@@ -77,7 +77,7 @@ class EditStoreFragment : Fragment() {
                     mActivity?.onBackPressed()
                 }
                 is StoreEntity -> {
-                    mEditStoreViewModel.setStoreSelected(mStoreEntity!!)
+                    mEditStoreViewModel.setStoreSelected(mStoreEntity)
                     Snackbar.make(
                         mBinding.root,
                         R.string.edit_store_message_update_success,
@@ -141,8 +141,7 @@ class EditStoreFragment : Fragment() {
                 true
             }
             R.id.action_save -> {
-                if (mStoreEntity != null &&
-                    validateFields(mBinding.tilPhotoUrl, mBinding.tilPhone, mBinding.tilName)
+                if (validateFields(mBinding.tilPhotoUrl, mBinding.tilPhone, mBinding.tilName)
                 ) {
                     with(mStoreEntity!!) {
                         name = mBinding.etName.text.toString().trim()

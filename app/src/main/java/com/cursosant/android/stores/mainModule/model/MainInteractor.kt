@@ -1,7 +1,9 @@
 package com.cursosant.android.stores.mainModule.model
 
+import android.util.Log
 import com.cursosant.android.stores.StoreApplication
 import com.cursosant.android.stores.common.entities.StoreEntity
+import com.google.gson.Gson
 import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.uiThread
 
@@ -24,6 +26,8 @@ class MainInteractor {
         doAsync {
             val storesList = StoreApplication.database.storeDao().getAllStores()
             uiThread {
+                val gson = Gson().toJson(storesList)
+                Log.i("Gson", gson)
                 callBack(storesList)
             }
         }

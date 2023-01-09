@@ -1,6 +1,8 @@
 package com.cursosant.android.stores.mainModule.model
 
 import android.util.Log
+import com.android.volley.Request
+import com.android.volley.toolbox.JsonObjectRequest
 import com.cursosant.android.stores.StoreApplication
 import com.cursosant.android.stores.common.entities.StoreEntity
 import com.google.gson.Gson
@@ -8,21 +10,17 @@ import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.uiThread
 
 class MainInteractor {
-    //https://stores.free.beeceptor.com/api/stores
-    /*interface StoreCallback {
-        fun getStoresCallback(storesList: MutableList<StoreEntity>)
+    fun getStores(callBack: (MutableList<StoreEntity>) -> Unit) {
+        val url = "https://stores.free.beeceptor.com/api/stores"
+        val jsonObjectRequest = JsonObjectRequest(Request.Method.GET, url, null, { response ->
+            Log.i("response", response.toString())
+        }, {
+            it.printStackTrace()
+        })
+        StoreApplication.storeAPI.addToRequestQueue(jsonObjectRequest)
     }
 
-    fun getStoresCallback(callBack: StoreCallback) {
-        doAsync {
-            val storesList = StoreApplication.database.storeDao().getAllStores()
-            uiThread {
-                callBack.getStoresCallback(storesList)
-            }
-        }
-    }*/
-
-    fun getStores(callBack: (MutableList<StoreEntity>) -> Unit) {
+    fun getStoresRoom(callBack: (MutableList<StoreEntity>) -> Unit) {
         doAsync {
             val storesList = StoreApplication.database.storeDao().getAllStores()
             uiThread {
@@ -36,13 +34,14 @@ class MainInteractor {
     fun deleteStore(storeEntity: StoreEntity, callBack: (StoreEntity) -> Unit) {
 
         doAsync {
-             StoreApplication.database.storeDao().deleteStore(storeEntity)
+            StoreApplication.database.storeDao().deleteStore(storeEntity)
             uiThread {
                 callBack(storeEntity)
             }
         }
     }
-    fun updateStore(storeEntity: StoreEntity, callback:(StoreEntity)->Unit){
+
+    fun updateStore(storeEntity: StoreEntity, callback: (StoreEntity) -> Unit) {
         doAsync {
             StoreApplication.database.storeDao().updateStore(storeEntity)
             uiThread {

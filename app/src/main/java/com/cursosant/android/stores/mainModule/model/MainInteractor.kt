@@ -6,7 +6,7 @@ import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.uiThread
 
 class MainInteractor {
-
+    //https://stores.free.beeceptor.com/api/stores
     /*interface StoreCallback {
         fun getStoresCallback(storesList: MutableList<StoreEntity>)
     }

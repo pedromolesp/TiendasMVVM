@@ -17,8 +17,15 @@ class MainInteractor {
             Log.i("response", response.toString())
             val status = response.getInt(Constants.STATUS_PROPERTY)
 
-            if(status == Constants.SUCCESS){
-                Log.i("status",status.toString())
+            if (status == Constants.SUCCESS) {
+                Log.i("status", status.toString())
+
+
+                val jsonObject = Gson().fromJson<StoreEntity>(
+                    response.getJSONArray(Constants.STORES_PROPERTY).get(0).toString(),
+                    StoreEntity::class.java
+                )
+
             }
         }, {
             it.printStackTrace()

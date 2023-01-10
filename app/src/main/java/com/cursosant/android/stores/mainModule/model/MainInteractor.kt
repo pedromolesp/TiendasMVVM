@@ -15,6 +15,11 @@ class MainInteractor {
         val url = Constants.STORES_URL + Constants.GET_ALL_STORES_URL
         val jsonObjectRequest = JsonObjectRequest(Request.Method.GET, url, null, { response ->
             Log.i("response", response.toString())
+            val status = response.getInt(Constants.STATUS_PROPERTY)
+
+            if(status == Constants.SUCCESS){
+                Log.i("status",status.toString())
+            }
         }, {
             it.printStackTrace()
         })

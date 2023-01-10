@@ -5,13 +5,14 @@ import com.android.volley.Request
 import com.android.volley.toolbox.JsonObjectRequest
 import com.cursosant.android.stores.StoreApplication
 import com.cursosant.android.stores.common.entities.StoreEntity
+import com.cursosant.android.stores.common.utils.Constants
 import com.google.gson.Gson
 import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.uiThread
 
 class MainInteractor {
     fun getStores(callBack: (MutableList<StoreEntity>) -> Unit) {
-        val url = "https://stores.free.beeceptor.com/api/stores"
+        val url = Constants.STORES_URL + Constants.GET_ALL_STORES_URL
         val jsonObjectRequest = JsonObjectRequest(Request.Method.GET, url, null, { response ->
             Log.i("response", response.toString())
         }, {

@@ -7,6 +7,7 @@ import com.cursosant.android.stores.StoreApplication
 import com.cursosant.android.stores.common.entities.StoreEntity
 import com.cursosant.android.stores.common.utils.Constants
 import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.uiThread
 
@@ -21,11 +22,14 @@ class MainInteractor {
                 Log.i("status", status.toString())
 
 
-                val jsonObject = Gson().fromJson<StoreEntity>(
-                    response.getJSONArray(Constants.STORES_PROPERTY).get(0).toString(),
-                    StoreEntity::class.java
-                )
 
+                val jsonList =
+                    response.getJSONArray(Constants.STORES_PROPERTY).toString()
+
+                val mutableListType = object  : TypeToken<MutableList<StoreEntity>>(){}.type
+                val storeList = Gson().fromJson<MutableList<StoreEntity>>(jsonList, mutableListType)
+
+                callBack(storeList)
             }
         }, {
             it.printStackTrace()

@@ -16,16 +16,21 @@ class MainInteractor {
         val url = Constants.STORES_URL + Constants.GET_ALL_STORES_URL
         val jsonObjectRequest = JsonObjectRequest(Request.Method.GET, url, null, { response ->
 //            val status = response.getInt(Constants.STATUS_PROPERTY)
+            var storeList = mutableListOf<StoreEntity>()
             val status = response.optInt(Constants.STATUS_PROPERTY, Constants.ERROR)
             if (status == Constants.SUCCESS) {
 
                 val jsonList =
-                    response.getJSONArray(Constants.STORES_PROPERTY).toString()
-                val mutableListType = object  : TypeToken<MutableList<StoreEntity>>(){}.type
-                val storeList = Gson().fromJson<MutableList<StoreEntity>>(jsonList, mutableListType)
-
-                callBack(storeList)
+                    response.optJSONArray(Constants.STORES_PROPERTY)?.toString()
+                if (jsonList != null) {
+                    val mutableListType = object : TypeToken<MutableList<StoreEntity>>() {}.type
+                    storeList =
+                        Gson().fromJson<MutableList<StoreEntity>>(jsonList, mutableListType)
+                    callBack(storeList)
+                    return@JsonObjectRequest
+                }
             }
+            callBack(storeList)
         }, {
             it.printStackTrace()
         })

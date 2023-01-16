@@ -32,6 +32,8 @@ class MainInteractor {
             }
             callBack(storeList)
         }, {
+            callBack(mutableListOf())
+
             it.printStackTrace()
         })
         StoreApplication.storeAPI.addToRequestQueue(jsonObjectRequest)

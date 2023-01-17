@@ -32,21 +32,21 @@ class MainViewModel : ViewModel() {
         return stores
     }
 
-    private fun loadStores() {
-        showProgress.value = Constants.SHOW
-        interactor.getStores {
-            showProgress.value = Constants.HIDE
-            stores.value = it
-            storeList = it
-        }
-    }
-
+//    private fun loadStores() {
+//        showProgress.value = Constants.SHOW
+//        interactor.getStores {
+//            showProgress.value = Constants.HIDE
+//            stores.value = it
+//            storeList = it
+//        }
+//    }
+    private val stores = interactor.stores
     fun deleteStore(storeEntity: StoreEntity) {
         interactor.deleteStore(storeEntity) {
             val index = storeList.indexOf(storeEntity)
             if (index != -1) {
                 storeList.removeAt(index)
-                stores.value = storeList
+//                stores.value = storeList
             }
         }
     }
@@ -56,7 +56,7 @@ class MainViewModel : ViewModel() {
             val index = storeList.indexOf(storeEntity)
             if (index != -1) {
                 storeList[index] = storeEntity
-                stores.value = storeList
+//                stores.value = storeList
             }
         }
     }

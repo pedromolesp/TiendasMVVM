@@ -14,7 +14,7 @@ import com.cursosant.android.stores.databinding.ActivityMainBinding
 import com.cursosant.android.stores.editModule.EditStoreFragment
 import com.cursosant.android.stores.editModule.viewModel.EditStoreViewModel
 import com.cursosant.android.stores.mainModule.adapter.OnClickListener
-import com.cursosant.android.stores.mainModule.adapter.StoreAdapter
+import com.cursosant.android.stores.mainModule.adapter.StoreListAdapter
 import com.cursosant.android.stores.mainModule.viewmodel.MainViewModel
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 
@@ -22,7 +22,7 @@ class MainActivity : AppCompatActivity(), OnClickListener {
 
     private lateinit var mBinding: ActivityMainBinding
 
-    private lateinit var mAdapter: StoreAdapter
+    private lateinit var mAdapter: StoreListAdapter
     private lateinit var mGridLayout: GridLayoutManager
 
     //MVVM
@@ -42,7 +42,7 @@ class MainActivity : AppCompatActivity(), OnClickListener {
     private fun setupViewModel() {
         mMainViewModel = ViewModelProvider(this).get(MainViewModel::class.java)
         mMainViewModel.getStores().observe(this, { stores ->
-            mAdapter.setStores(stores)
+            mAdapter.submitList(stores)
         })
 
         mMainViewModel.showProgress().observe(this) { isShowProgress ->
@@ -53,9 +53,6 @@ class MainActivity : AppCompatActivity(), OnClickListener {
             if (isVisible) mBinding.fab.show() else mBinding.fab.hide()
         })
 
-        mEditSoreViewModel.getStoreSelected().observe(this) { storeEntity ->
-            mAdapter.add(storeEntity)
-        }
     }
 
     private fun launchEditFragment(storeEntity: StoreEntity = StoreEntity()) {
@@ -71,7 +68,7 @@ class MainActivity : AppCompatActivity(), OnClickListener {
     }
 
     private fun setupRecylcerView() {
-        mAdapter = StoreAdapter(mutableListOf(), this)
+        mAdapter = StoreListAdapter( this)
         mGridLayout = GridLayoutManager(this, resources.getInteger(R.integer.main_columns))
 //        getStores()
 

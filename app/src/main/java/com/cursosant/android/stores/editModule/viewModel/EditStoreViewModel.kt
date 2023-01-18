@@ -51,8 +51,6 @@ class EditStoreViewModel : ViewModel() {
     }
 
     fun updateStore(storeEntity: StoreEntity) {
-        interactor.updateStore(storeEntity) { storeUpdated ->
-            result.value = storeUpdated
-        }
+        interactor.updateStore(storeEntity)
     }
 }

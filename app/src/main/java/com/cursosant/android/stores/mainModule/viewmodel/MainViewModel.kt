@@ -5,7 +5,9 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.cursosant.android.stores.common.entities.StoreEntity
+import com.cursosant.android.stores.common.utils.Constants
 import com.cursosant.android.stores.mainModule.model.MainInteractor
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 
 class MainViewModel : ViewModel() {
@@ -44,16 +46,33 @@ class MainViewModel : ViewModel() {
 //        }
 //    }
     fun deleteStore(storeEntity: StoreEntity) {
-        viewModelScope.launch {
+        executeAction {
             interactor.deleteStore(storeEntity)
+
         }
 
     }
 
     fun updateStore(storeEntity: StoreEntity) {
-        viewModelScope.launch {
-            storeEntity.isFavorite = !storeEntity.isFavorite
+        storeEntity.isFavorite = !storeEntity.isFavorite
+        executeAction {
             interactor.updateStore(storeEntity)
+        }
+
+
+    }
+
+
+    private fun executeAction(block: suspend () -> Unit): Job {
+        showProgress.value = Constants.SHOW
+        return viewModelScope.launch {
+            try {
+                block()
+            } catch (e: Exception) {
+                e.printStackTrace()
+            } finally {
+                showProgress.value = Constants.HIDE
+            }
         }
     }
 }

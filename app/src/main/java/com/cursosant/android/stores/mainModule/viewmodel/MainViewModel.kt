@@ -44,13 +44,10 @@ class MainViewModel : ViewModel() {
 //        }
 //    }
     fun deleteStore(storeEntity: StoreEntity) {
-        interactor.deleteStore(storeEntity) {
-            val index = storeList.indexOf(storeEntity)
-            if (index != -1) {
-                storeList.removeAt(index)
-//                stores.value = storeList
-            }
+        viewModelScope.launch {
+            interactor.deleteStore(storeEntity)
         }
+
     }
 
     fun updateStore(storeEntity: StoreEntity) {

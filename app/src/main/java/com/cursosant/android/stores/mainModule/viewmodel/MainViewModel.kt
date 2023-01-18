@@ -3,8 +3,10 @@ package com.cursosant.android.stores.mainModule.viewmodel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.cursosant.android.stores.common.entities.StoreEntity
 import com.cursosant.android.stores.mainModule.model.MainInteractor
+import kotlinx.coroutines.launch
 
 class MainViewModel : ViewModel() {
     private var storeList: MutableList<StoreEntity>
@@ -52,12 +54,9 @@ class MainViewModel : ViewModel() {
     }
 
     fun updateStore(storeEntity: StoreEntity) {
-        interactor.updateStore(storeEntity) {
-            val index = storeList.indexOf(storeEntity)
-            if (index != -1) {
-                storeList[index] = storeEntity
-//                stores.value = storeList
-            }
+        viewModelScope.launch {
+            storeEntity.isFavorite = !storeEntity.isFavorite
+            interactor.updateStore(storeEntity)
         }
     }
 }

@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.cursosant.android.stores.common.entities.StoreEntity
+import com.cursosant.android.stores.common.utils.TypeError
 import com.cursosant.android.stores.mainModule.model.MainInteractor
 import kotlinx.coroutines.launch
 
@@ -18,6 +19,7 @@ class MainViewModel : ViewModel() {
         interactor = MainInteractor()
         stores = interactor.stores
     }
+    private val typeError:MutableLiveData<TypeError> = MutableLiveData()
 
     private val showProgress: MutableLiveData<Boolean> = MutableLiveData()
 
@@ -55,5 +57,8 @@ class MainViewModel : ViewModel() {
             storeEntity.isFavorite = !storeEntity.isFavorite
             interactor.updateStore(storeEntity)
         }
+    }
+    fun getTypeError():MutableLiveData<TypeError> {
+        return typeError
     }
 }

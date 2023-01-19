@@ -10,13 +10,15 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
 import com.cursosant.android.stores.R
 import com.cursosant.android.stores.common.entities.StoreEntity
+import com.cursosant.android.stores.common.utils.TypeError
 import com.cursosant.android.stores.databinding.ActivityMainBinding
 import com.cursosant.android.stores.editModule.EditStoreFragment
 import com.cursosant.android.stores.editModule.viewModel.EditStoreViewModel
 import com.cursosant.android.stores.mainModule.adapter.OnClickListener
- import com.cursosant.android.stores.mainModule.adapter.StoreListAdapter
+import com.cursosant.android.stores.mainModule.adapter.StoreListAdapter
 import com.cursosant.android.stores.mainModule.viewmodel.MainViewModel
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.google.android.material.snackbar.Snackbar
 
 class MainActivity : AppCompatActivity(), OnClickListener {
 
@@ -49,6 +51,17 @@ class MainActivity : AppCompatActivity(), OnClickListener {
         mMainViewModel.showProgress().observe(this) { isShowProgress ->
             mBinding.progressBar.visibility = if (isShowProgress) View.VISIBLE else View.GONE
         }
+
+        mMainViewModel.getTypeError().observe(this) { typeError ->
+            val msgRes = when (typeError) {
+                TypeError.GET -> "Error al consultar datos"
+                TypeError.DELETE -> "Error al eliminar datos"
+                TypeError.INSERT -> "Error al insertar datos"
+                TypeError.UPDATE -> "Error al actualizar datos"
+                else -> "Error desconocido"
+            }
+            Snackbar.make(mBinding.root, msgRes, Snackbar.LENGTH_SHORT).show()
+        }
         mEditSoreViewModel = ViewModelProvider(this).get(EditStoreViewModel::class.java)
         mEditSoreViewModel.getShowFav().observe(this, { isVisible ->
             if (isVisible) mBinding.fab.show() else mBinding.fab.hide()
@@ -69,7 +82,7 @@ class MainActivity : AppCompatActivity(), OnClickListener {
     }
 
     private fun setupRecylcerView() {
-        mAdapter = StoreListAdapter( this)
+        mAdapter = StoreListAdapter(this)
         mGridLayout = GridLayoutManager(this, resources.getInteger(R.integer.main_columns))
 //        getStores()
 
